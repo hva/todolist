@@ -2,7 +2,7 @@
 using Windows.ApplicationModel.Activation;
 using Prism.Unity.Windows;
 
-namespace TodoList
+namespace TodoList.UWP
 {
     sealed partial class App : PrismUnityApplication
     {
