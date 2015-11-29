@@ -7,11 +7,15 @@ namespace TodoList.UWP.Data.Models
     {
         public ItemsSet()
         {
-            Items = new List<Item>();
-            Sortorder = new List<Guid>();
+            Todos = new List<Item>();
+            Done = new List<Item>();
+            TodosSortorder = new List<Guid>();
+            DoneSortorder = new List<Guid>();
         }
 
-        public List<Item> Items { get; set; }
-        public List<Guid> Sortorder { get; set; }
+        public List<Item> Todos { get; set; }
+        public List<Item> Done { get; set; }
+        public List<Guid> TodosSortorder { get; set; }
+        public List<Guid> DoneSortorder { get; set; }
     }
 }

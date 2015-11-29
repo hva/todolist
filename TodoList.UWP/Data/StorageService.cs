@@ -23,7 +23,7 @@ namespace TodoList.UWP.Data
 
         public Task SaveAsync<T>(T items, string fileName) where T : class
         {
-            var content = JsonConvert.SerializeObject(items);
+            var content = JsonConvert.SerializeObject(items, Formatting.Indented);
             return WriteAsync(content, fileName);
         }
 

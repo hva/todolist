@@ -17,14 +17,16 @@ namespace TodoList.UWP.Data
             this.storageService = storageService;
         }
 
-        public Task<List<Item>> GetTodosAsync()
+        public async Task<List<Item>> GetTodosAsync()
         {
-            return GetOrderedItems(x => !x.IsDone);
+            var set = await LoadItemsSetAsync();
+            return GetSortedList(set.Todos, set.TodosSortorder);
         }
 
-        public Task<List<Item>> GetDoneAsync()
+        public async Task<List<Item>> GetDoneAsync()
         {
-            return GetOrderedItems(x => x.IsDone);
+            var set = await LoadItemsSetAsync();
+            return GetSortedList(set.Done, set.DoneSortorder);
         }
 
         public async Task CreateAsync(Item item)
@@ -32,16 +34,15 @@ namespace TodoList.UWP.Data
             var guid = Guid.NewGuid();
             item.Guid = guid;
             var set = await LoadItemsSetAsync();
-            set.Sortorder.Insert(0, guid);
-            set.Items.Add(item);
+            set.TodosSortorder.Insert(0, guid);
+            set.Todos.Add(item);
             await SaveItemsSetAsync(set);
         }
 
-        private async Task<List<Item>> GetOrderedItems(Predicate<Item> isValid)
+        private static List<Item> GetSortedList(IEnumerable<Item> list, IEnumerable<Guid> sortorder)
         {
-            var set = await LoadItemsSetAsync();
-            var hash = set.Items.ToDictionary(x => x.Guid, x => x);
-            return set.Sortorder.Select(key => hash[key]).Where(val => isValid(val)).ToList();
+            var hash = list.ToDictionary(x => x.Guid);
+            return sortorder.Select(key => hash[key]).ToList();
         }
 
         private async Task<ItemsSet> LoadItemsSetAsync()

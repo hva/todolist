@@ -39,7 +39,7 @@ namespace TodoList.UWP.ViewModels
         public override async void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
         {
             var todos = await itemsRepository.GetTodosAsync();
-            var viewModels = todos.Select(x => new ItemViewModel(x, changeItemStateCommand));
+            var viewModels = todos.Select(x => new ItemViewModel(x, false, changeItemStateCommand));
             Items.AddRange(viewModels);
         }
 
@@ -49,11 +49,12 @@ namespace TodoList.UWP.ViewModels
             NewItemText = string.Empty;
 
             await itemsRepository.CreateAsync(item);
-            var viewModel = new ItemViewModel(item, changeItemStateCommand);
+
+            var viewModel = new ItemViewModel(item, false, changeItemStateCommand);
             Items.Insert(0, viewModel);
         }
 
-        private void ChangeItemState(ItemViewModel guid)
+        private void ChangeItemState(ItemViewModel viewModel)
         {
             
         }

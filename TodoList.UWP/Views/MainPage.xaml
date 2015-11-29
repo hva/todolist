@@ -20,9 +20,9 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <CheckBox
-                    IsChecked="{Binding Item.IsDone}"
+                    IsChecked="{Binding IsDone}"
                     Command="{Binding ChangeStateCommand}"
-                    CommandParameter="{Binding Item}" />
+                    CommandParameter="{Binding}" />
                 <TextBlock Grid.Column="1" Text="{Binding Item.Text}" VerticalAlignment="Center" />
             </Grid>
         </DataTemplate>
