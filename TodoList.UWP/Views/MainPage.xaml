@@ -19,13 +19,17 @@
                     <ColumnDefinition Width="44" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <CheckBox
-                    IsChecked="{Binding IsDone}"
-                    Command="{Binding ChangeStateCommand}"
-                    CommandParameter="{Binding}" />
+                <CheckBox IsChecked="{Binding IsDone, Mode=TwoWay}" />
                 <TextBlock Grid.Column="1" Text="{Binding Item.Text}" VerticalAlignment="Center" />
             </Grid>
         </DataTemplate>
+        <DataTemplate x:Key="SeparatorTemplate">
+            <Rectangle Height="60" />
+        </DataTemplate>
+        <mainPage:ItemTemplateSelector
+            x:Key="ItemTemplateSelector"
+            ItemTemplate="{StaticResource ItemTemplate}"
+            SeparatorTemplate="{StaticResource SeparatorTemplate}" />
     </Page.Resources>
 
     <Grid Background="{StaticResource TertiaryBg}" d:DataContext="{d:DesignInstance Type=viewModels:MainPageViewModel}">
@@ -49,8 +53,9 @@
 
         <ListView
             Grid.Row="2"
+            VerticalAlignment="Top"
             ItemsSource="{Binding Items}"
-            ItemTemplate="{StaticResource ItemTemplate}"
+            ItemTemplateSelector="{StaticResource ItemTemplateSelector}"
             Margin="16,0" />
 
     </Grid>

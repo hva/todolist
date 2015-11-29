@@ -15,20 +15,20 @@ namespace TodoList.UWP.ViewModels
     public class MainPageViewModel : ViewModelBase
     {
         private string newItemText;
-        private readonly ICommand changeItemStateCommand;
+        private readonly ItemsListSeparator separator;
         private readonly IItemsRepository itemsRepository;
 
         public MainPageViewModel(IItemsRepository itemsRepository)
         {
             this.itemsRepository = itemsRepository;
 
-            changeItemStateCommand = new DelegateCommand<ItemViewModel>(ChangeItemState);
+            separator = new ItemsListSeparator();
             AddNewItemCommand = DelegateCommand.FromAsyncHandler(AddNewItemAsync, () => !string.IsNullOrWhiteSpace(newItemText));
-            Items = new ObservableCollection<ItemViewModel>();
+            Items = new ObservableCollection<object>();
         }
 
         public ICommand AddNewItemCommand { get; }
-        public ObservableCollection<ItemViewModel> Items { get; }
+        public ObservableCollection<object> Items { get; }
 
         public string NewItemText
         {
@@ -38,9 +38,15 @@ namespace TodoList.UWP.ViewModels
 
         public override async void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
         {
-            var todos = await itemsRepository.GetTodosAsync();
-            var viewModels = todos.Select(x => new ItemViewModel(x, false, changeItemStateCommand));
-            Items.AddRange(viewModels);
+            var list = await itemsRepository.GetTodoAsync();
+            var todos = list.Select(CreateTodo);
+            Items.AddRange(todos);
+
+            Items.Add(separator);
+
+            list = await itemsRepository.GetDoneAsync();
+            var done = list.Select(CreateDone);
+            Items.AddRange(done);
         }
 
         private async Task AddNewItemAsync()
@@ -50,13 +56,34 @@ namespace TodoList.UWP.ViewModels
 
             await itemsRepository.CreateAsync(item);
 
-            var viewModel = new ItemViewModel(item, false, changeItemStateCommand);
+            var viewModel = CreateTodo(item);
             Items.Insert(0, viewModel);
         }
 
-        private void ChangeItemState(ItemViewModel viewModel)
+        private async void ChangeItemStateAsync(ItemViewModel viewModel)
         {
-            
+            var isDone = viewModel.IsDone;
+            await itemsRepository.SetIsDoneAsync(viewModel.Item.Guid, isDone);
+
+            Items.Remove(viewModel);
+            var separatorIndex = Items.IndexOf(separator);
+            if (isDone)
+            {
+                Items.Insert(separatorIndex + 1, CreateDone(viewModel.Item));
+            }
+            else
+            {
+                Items.Insert(separatorIndex, CreateTodo(viewModel.Item));
+            }
+        }
+
+        private ItemViewModel CreateTodo(Item item)
+        {
+            return new ItemViewModel(item, false, ChangeItemStateAsync);
+        }
+        private ItemViewModel CreateDone(Item item)
+        {
+            return new ItemViewModel(item, true, ChangeItemStateAsync);
         }
     }
 }

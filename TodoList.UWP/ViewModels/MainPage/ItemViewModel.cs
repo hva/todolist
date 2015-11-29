@@ -1,19 +1,34 @@
-﻿using System.Windows.Input;
+﻿using System;
+using Prism.Mvvm;
 using TodoList.UWP.Data.Models;
 
 namespace TodoList.UWP.ViewModels.MainPage
 {
-    public class ItemViewModel
+    public class ItemViewModel : BindableBase
     {
-        public ItemViewModel(Item item, bool isDone, ICommand changeStateCommand)
+        private bool isDone;
+        private readonly Action<ItemViewModel> updateState;
+
+        public ItemViewModel(Item item, bool isDone, Action<ItemViewModel> updateState)
         {
             Item = item;
-            IsDone = isDone;
-            ChangeStateCommand = changeStateCommand;
+            this.isDone = isDone;
+            this.updateState = updateState;
         }
 
         public Item Item { get; }
-        public bool IsDone { get; }
-        public ICommand ChangeStateCommand { get; }
+
+        public bool IsDone
+        {
+            get { return isDone; }
+            set
+            {
+                isDone = value;
+                if (updateState != null)
+                {
+                    updateState(this);
+                }
+            }
+        }
     }
 }

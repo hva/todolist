@@ -17,16 +17,16 @@ namespace TodoList.UWP.Data
             this.storageService = storageService;
         }
 
-        public async Task<List<Item>> GetTodosAsync()
+        public async Task<List<Item>> GetTodoAsync()
         {
             var set = await LoadItemsSetAsync();
-            return GetSortedList(set.Todos, set.TodosSortorder);
+            return set.Todo;
         }
 
         public async Task<List<Item>> GetDoneAsync()
         {
             var set = await LoadItemsSetAsync();
-            return GetSortedList(set.Done, set.DoneSortorder);
+            return set.Done;
         }
 
         public async Task CreateAsync(Item item)
@@ -34,8 +34,25 @@ namespace TodoList.UWP.Data
             var guid = Guid.NewGuid();
             item.Guid = guid;
             var set = await LoadItemsSetAsync();
-            set.TodosSortorder.Insert(0, guid);
-            set.Todos.Add(item);
+            set.Todo.Insert(0, item);
+            await SaveItemsSetAsync(set);
+        }
+
+        public async Task SetIsDoneAsync(Guid guid, bool isDone)
+        {
+            var set = await LoadItemsSetAsync();
+            if (isDone)
+            {
+                var item = set.Todo.First(x => x.Guid == guid);
+                set.Todo.Remove(item);
+                set.Done.Insert(0, item);
+            }
+            else
+            {
+                var item = set.Done.First(x => x.Guid == guid);
+                set.Done.Remove(item);
+                set.Todo.Add(item);
+            }
             await SaveItemsSetAsync(set);
         }
 
