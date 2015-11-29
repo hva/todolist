@@ -5,8 +5,25 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mvvm="using:Prism.Windows.Mvvm"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:behaviors="using:TodoList.UWP.Behaviors"
+    xmlns:viewModels="using:TodoList.UWP.ViewModels"
     mvvm:ViewModelLocator.AutoWireViewModel="True"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=viewModels:MainPageViewModel}">
+
+    <Page.Resources>
+        <DataTemplate x:Key="ItemTemplate">
+            <Grid Height="44" Background="White" d:DataContext="{d:DesignInstance Type=viewModels:ItemViewModel}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="44" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <CheckBox />
+                <TextBlock Grid.Column="1" Text="{Binding Text}" />
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
 
     <Grid Background="{StaticResource TertiaryBg}">
         <Grid.RowDefinitions>
@@ -19,7 +36,19 @@
             <TextBlock Text="Inbox" Style="{StaticResource Title}" Margin="32,0" />
         </Grid>
 
-        <TextBox Grid.Row="1" PlaceholderText="Add a to-do..." Margin="16" />
+        <Grid Grid.Row="1" Margin="16">
+            <TextBox Text="{Binding NewItemText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Add a to-do..." >
+                <i:Interaction.Behaviors>
+                    <behaviors:TextBoxBehavior EnterPressedCommand="{Binding AddNewItemCommand}" />
+                </i:Interaction.Behaviors>
+            </TextBox>
+        </Grid>
+
+        <ListView
+            Grid.Row="2"
+            ItemsSource="{Binding Items}"
+            ItemTemplate="{StaticResource ItemTemplate}"
+            Margin="16,0" />
 
     </Grid>
 </Page>
