@@ -98,9 +98,15 @@
     </Compile>
     <Compile Include="Behaviors\TextBoxBehavior.cs" />
     <Compile Include="Constants\PageName.cs" />
+    <Compile Include="Data\Interfaces\IItemsRepository.cs" />
+    <Compile Include="Data\Interfaces\IStorageService.cs" />
+    <Compile Include="Data\ItemsRepository.cs" />
+    <Compile Include="Data\Models\Item.cs" />
+    <Compile Include="Data\Models\ItemsSet.cs" />
+    <Compile Include="Data\StorageService.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\ItemViewModel.cs" />
+    <Compile Include="ViewModels\MainPage\ItemViewModel.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -164,6 +170,7 @@
       <Name>Behaviors SDK %28XAML%29</Name>
     </SDKReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

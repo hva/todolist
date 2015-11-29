@@ -8,18 +8,22 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:behaviors="using:TodoList.UWP.Behaviors"
     xmlns:viewModels="using:TodoList.UWP.ViewModels"
+    xmlns:mainPage="using:TodoList.UWP.ViewModels.MainPage"
     mvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
 
     <Page.Resources>
         <DataTemplate x:Key="ItemTemplate">
-            <Grid d:DataContext="{d:DesignInstance Type=viewModels:ItemViewModel}">
+            <Grid d:DataContext="{d:DesignInstance Type=mainPage:ItemViewModel}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="44" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <CheckBox />
-                <TextBlock Grid.Column="1" Text="{Binding Text}" VerticalAlignment="Center" />
+                <CheckBox
+                    IsChecked="{Binding Item.IsDone}"
+                    Command="{Binding ChangeStateCommand}"
+                    CommandParameter="{Binding Item}" />
+                <TextBlock Grid.Column="1" Text="{Binding Item.Text}" VerticalAlignment="Center" />
             </Grid>
         </DataTemplate>
     </Page.Resources>
