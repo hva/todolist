@@ -1,0 +1,76 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ColorsAndBrushes.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style TargetType="TextBox">
+        <Setter Property="Padding" Value="16,0" />
+        <Setter Property="Height" Value="44" />
+        <Setter Property="MinHeight" Value="44" />
+        <Setter Property="Background" Value="{StaticResource SecondaryBg}" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Disabled" />
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver" />
+                                <VisualState x:Name="Focused">
+                                    <!--<Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentElement"
+                                                     Storyboard.TargetProperty="RequestedTheme">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Light" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>-->
+                                    <VisualState.Setters>
+                                        <Setter Target="BackgroundElement.Background" Value="White" />
+                                        <Setter Target="ContentElement.Foreground" Value="{ThemeResource SystemControlForegroundChromeBlackHighBrush}" />
+                                        <Setter Target="PlaceholderTextContentPresenter.Foreground" Value="{ThemeResource SystemControlPageTextChromeBlackMediumLowBrush}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="ButtonStates">
+                                <VisualState x:Name="ButtonVisible" />
+                                <VisualState x:Name="ButtonCollapsed" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <Border x:Name="BackgroundElement" Background="{TemplateBinding Background}" />
+
+                        <!-- Margin is hardcoded to simulate VerticalContentAlignment=Center inside scroll viewer -->
+                        <ScrollViewer x:Name="ContentElement"
+                            Foreground="White"
+                            HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}"
+                            HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                            VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}"
+                            VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                            IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}"
+                            IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}"
+                            IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}"
+                            Margin="0,12,0,0"
+                            Padding="{TemplateBinding Padding}"
+                            IsTabStop="False"
+                            AutomationProperties.AccessibilityView="Raw"
+                            ZoomMode="Disabled" />
+
+                        <!-- Margin is binded to content element -->
+                        <ContentControl x:Name="PlaceholderTextContentPresenter"
+                            Foreground="White"
+                            Margin="{Binding Margin, ElementName=ContentElement}"
+                            Padding="{TemplateBinding Padding}"
+                            IsTabStop="False"
+                            Content="{TemplateBinding PlaceholderText}"
+                            IsHitTestVisible="False" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

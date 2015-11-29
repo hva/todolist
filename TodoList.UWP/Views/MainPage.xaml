@@ -11,12 +11,15 @@
     <Grid Background="{StaticResource TertiaryBg}">
         <Grid.RowDefinitions>
             <RowDefinition Height="44" />
+            <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
         <Grid Background="{StaticResource SecondaryBg}">
             <TextBlock Text="Inbox" Style="{StaticResource Title}" Margin="32,0" />
         </Grid>
+
+        <TextBox Grid.Row="1" PlaceholderText="Add a to-do..." Margin="16" />
 
     </Grid>
 </Page>
