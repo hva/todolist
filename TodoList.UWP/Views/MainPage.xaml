@@ -9,23 +9,22 @@
     xmlns:behaviors="using:TodoList.UWP.Behaviors"
     xmlns:viewModels="using:TodoList.UWP.ViewModels"
     mvvm:ViewModelLocator.AutoWireViewModel="True"
-    mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance Type=viewModels:MainPageViewModel}">
+    mc:Ignorable="d">
 
     <Page.Resources>
         <DataTemplate x:Key="ItemTemplate">
-            <Grid Height="44" Background="White" d:DataContext="{d:DesignInstance Type=viewModels:ItemViewModel}">
+            <Grid d:DataContext="{d:DesignInstance Type=viewModels:ItemViewModel}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="44" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <CheckBox />
-                <TextBlock Grid.Column="1" Text="{Binding Text}" />
+                <TextBlock Grid.Column="1" Text="{Binding Text}" VerticalAlignment="Center" />
             </Grid>
         </DataTemplate>
     </Page.Resources>
 
-    <Grid Background="{StaticResource TertiaryBg}">
+    <Grid Background="{StaticResource TertiaryBg}" d:DataContext="{d:DesignInstance Type=viewModels:MainPageViewModel}">
         <Grid.RowDefinitions>
             <RowDefinition Height="44" />
             <RowDefinition Height="Auto" />
