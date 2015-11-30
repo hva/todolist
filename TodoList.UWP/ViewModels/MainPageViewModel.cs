@@ -6,6 +6,7 @@ using System.Windows.Input;
 using Prism.Commands;
 using Prism.Windows.Mvvm;
 using Prism.Windows.Navigation;
+using TodoList.UWP.Data;
 using TodoList.UWP.Data.Interfaces;
 using TodoList.UWP.Data.Models;
 using TodoList.UWP.ViewModels.MainPage;
@@ -18,9 +19,9 @@ namespace TodoList.UWP.ViewModels
         private readonly ItemsListSeparator separator;
         private readonly IItemsRepository itemsRepository;
 
-        public MainPageViewModel(IItemsRepository itemsRepository)
+        public MainPageViewModel()
         {
-            this.itemsRepository = itemsRepository;
+            itemsRepository = new ItemsRepository();
 
             separator = new ItemsListSeparator();
             AddNewItemCommand = DelegateCommand.FromAsyncHandler(AddNewItemAsync, () => !string.IsNullOrWhiteSpace(newItemText));

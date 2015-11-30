@@ -3,15 +3,12 @@ using Windows.ApplicationModel.Activation;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Microsoft.Practices.Unity;
-using Prism.Unity.Windows;
+using Prism.Windows;
 using TodoList.UWP.Constants;
-using TodoList.UWP.Data;
-using TodoList.UWP.Data.Interfaces;
 
 namespace TodoList.UWP
 {
-    sealed partial class App : PrismUnityApplication
+    sealed partial class App : PrismApplication
     {
         protected override Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args)
         {
@@ -23,13 +20,6 @@ namespace TodoList.UWP
         {
             ApplicationView.GetForCurrentView().Init();
             return rootFrame;
-        }
-
-        protected override void ConfigureContainer()
-        {
-            base.ConfigureContainer();
-            Container.RegisterType<IItemsRepository, ItemsRepository>(new ContainerControlledLifetimeManager());
-            Container.RegisterType<IStorageService, StorageService>(new ContainerControlledLifetimeManager());
         }
     }
 }

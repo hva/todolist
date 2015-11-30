@@ -12,9 +12,9 @@ namespace TodoList.UWP.Data
         private const string fileName = "data.json";
 
         private readonly IStorageService storageService;
-        public ItemsRepository(IStorageService storageService)
+        public ItemsRepository()
         {
-            this.storageService = storageService;
+            storageService = new StorageService();
         }
 
         public async Task<List<Item>> GetTodoAsync()
@@ -54,12 +54,6 @@ namespace TodoList.UWP.Data
                 set.Todo.Add(item);
             }
             await SaveItemsSetAsync(set);
-        }
-
-        private static List<Item> GetSortedList(IEnumerable<Item> list, IEnumerable<Guid> sortorder)
-        {
-            var hash = list.ToDictionary(x => x.Guid);
-            return sortorder.Select(key => hash[key]).ToList();
         }
 
         private async Task<ItemsSet> LoadItemsSetAsync()
