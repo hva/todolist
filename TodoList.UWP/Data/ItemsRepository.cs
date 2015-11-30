@@ -1,70 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using TodoList.UWP.Data.Interfaces;
-using TodoList.UWP.Data.Models;
+using Windows.Storage.Streams;
+using Windows.Web.Http;
+using Newtonsoft.Json;
+using TodoList.UWP.Models;
 
 namespace TodoList.UWP.Data
 {
     public class ItemsRepository : IItemsRepository
     {
-        private const string fileName = "data.json";
+        private const string endpoint = "http://localhost:63644/";
 
-        private readonly IStorageService storageService;
-        public ItemsRepository()
+        public async Task<List<Item>> GetAsync()
         {
-            storageService = new StorageService();
-        }
-
-        public async Task<List<Item>> GetTodoAsync()
-        {
-            var set = await LoadItemsSetAsync();
-            return set.Todo;
-        }
-
-        public async Task<List<Item>> GetDoneAsync()
-        {
-            var set = await LoadItemsSetAsync();
-            return set.Done;
+            using (var client = new HttpClient())
+            {
+                var str = await client.GetStringAsync(GetUri("api/items"));
+                return JsonConvert.DeserializeObject<List<Item>>(str);
+            }
         }
 
         public async Task CreateAsync(Item item)
         {
-            var guid = Guid.NewGuid();
-            item.Guid = guid;
-            var set = await LoadItemsSetAsync();
-            set.Todo.Insert(0, item);
-            await SaveItemsSetAsync(set);
-        }
-
-        public async Task SetIsDoneAsync(Guid guid, bool isDone)
-        {
-            var set = await LoadItemsSetAsync();
-            if (isDone)
+            using (var client = new HttpClient())
             {
-                var item = set.Todo.First(x => x.Guid == guid);
-                set.Todo.Remove(item);
-                set.Done.Insert(0, item);
+                var data = JsonConvert.SerializeObject(item);
+                using (var content = new HttpStringContent(data, UnicodeEncoding.Utf8, "application/json"))
+                {
+                    var resp = await client.PostAsync(GetUri("api/items"), content);
+                    if (resp.StatusCode == HttpStatusCode.Created)
+                    {
+                        var str = await resp.Content.ReadAsStringAsync();
+                        var guid = JsonConvert.DeserializeObject<Guid>(str);
+                        item.Guid = guid;
+                    }
+                }
             }
-            else
-            {
-                var item = set.Done.First(x => x.Guid == guid);
-                set.Done.Remove(item);
-                set.Todo.Add(item);
-            }
-            await SaveItemsSetAsync(set);
         }
 
-        private async Task<ItemsSet> LoadItemsSetAsync()
+        public Task SetIsDoneAsync(Guid guid, bool isDone)
         {
-            var set = await storageService.LoadAsync<ItemsSet>(fileName);
-            return set ?? new ItemsSet();
+            return Task.FromResult<object>(null);
         }
 
-        private Task SaveItemsSetAsync(ItemsSet set)
+        private Uri GetUri(string path)
         {
-            return storageService.SaveAsync(set, fileName);
+            return new Uri(string.Concat(endpoint, path), UriKind.Absolute);
         }
     }
 }

@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TodoList.UWP.Data.Models;
+using TodoList.UWP.Models;
 
-namespace TodoList.UWP.Data.Interfaces
+namespace TodoList.UWP.Data
 {
     public interface IItemsRepository
     {
-        Task<List<Item>> GetTodoAsync();
-        Task<List<Item>> GetDoneAsync();
+        Task<List<Item>> GetAsync();
         Task CreateAsync(Item item);
         Task SetIsDoneAsync(Guid guid, bool isDone);
     }

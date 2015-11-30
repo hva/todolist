@@ -1,6 +1,6 @@
 ﻿using System;
 using Prism.Mvvm;
-using TodoList.UWP.Data.Models;
+using TodoList.UWP.Models;
 
 namespace TodoList.UWP.ViewModels.MainPage
 {

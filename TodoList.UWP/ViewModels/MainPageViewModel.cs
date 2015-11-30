@@ -7,8 +7,7 @@ using Prism.Commands;
 using Prism.Windows.Mvvm;
 using Prism.Windows.Navigation;
 using TodoList.UWP.Data;
-using TodoList.UWP.Data.Interfaces;
-using TodoList.UWP.Data.Models;
+using TodoList.UWP.Models;
 using TodoList.UWP.ViewModels.MainPage;
 
 namespace TodoList.UWP.ViewModels
@@ -39,15 +38,11 @@ namespace TodoList.UWP.ViewModels
 
         public override async void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
         {
-            var list = await itemsRepository.GetTodoAsync();
+            var list = await itemsRepository.GetAsync();
             var todos = list.Select(CreateTodo);
             Items.AddRange(todos);
 
             Items.Add(separator);
-
-            list = await itemsRepository.GetDoneAsync();
-            var done = list.Select(CreateDone);
-            Items.AddRange(done);
         }
 
         private async Task AddNewItemAsync()
