@@ -1,8 +1,8 @@
 ﻿{
   "dependencies": {
     "Microsoft.NETCore.UniversalWindowsPlatform": "5.0.0",
-    "Newtonsoft.Json": "7.0.1",
-    "Prism.Windows": "6.0.1"
+    "newtonsoft.json": "7.0.1",
+    "prism.windows": "6.0.1"
   },
   "frameworks": {
     "uap10.0": {}
