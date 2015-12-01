@@ -3,6 +3,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.System;
+using Windows.UI.Xaml.Input;
 using Prism.Commands;
 using Prism.Windows.Mvvm;
 using Prism.Windows.Navigation;
@@ -23,7 +25,7 @@ namespace TodoList.UWP.ViewModels
             itemsRepository = new ItemsRepository();
 
             separator = new ItemsListSeparator();
-            AddNewItemCommand = DelegateCommand.FromAsyncHandler(AddNewItemAsync, () => !string.IsNullOrWhiteSpace(newItemText));
+            AddNewItemCommand = DelegateCommand<KeyRoutedEventArgs>.FromAsyncHandler(AddNewItemAsync, CanAddNewItem);
             Items = new ObservableCollection<object>();
         }
 
@@ -45,15 +47,23 @@ namespace TodoList.UWP.ViewModels
             Items.Add(separator);
         }
 
-        private async Task AddNewItemAsync()
+        private bool CanAddNewItem(KeyRoutedEventArgs e)
         {
-            var item = new Item { Text = newItemText };
-            NewItemText = string.Empty;
+            return !string.IsNullOrWhiteSpace(newItemText);
+        }
 
-            await itemsRepository.CreateAsync(item);
+        private async Task AddNewItemAsync(KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.Enter)
+            {
+                var item = new Item { Text = newItemText };
+                NewItemText = string.Empty;
 
-            var viewModel = CreateTodo(item);
-            Items.Insert(0, viewModel);
+                await itemsRepository.CreateAsync(item);
+
+                var viewModel = CreateTodo(item);
+                Items.Insert(0, viewModel);
+            }
         }
 
         private async void ChangeItemStateAsync(ItemViewModel viewModel)

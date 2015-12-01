@@ -95,7 +95,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Behaviors\TextBoxBehavior.cs" />
     <Compile Include="Constants\PageName.cs" />
     <Compile Include="Data\IItemsRepository.cs" />
     <Compile Include="Data\ItemsRepository.cs" />

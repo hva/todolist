@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mvvm="using:Prism.Windows.Mvvm"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
-    xmlns:behaviors="using:TodoList.UWP.Behaviors"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:viewModels="using:TodoList.UWP.ViewModels"
     xmlns:mainPage="using:TodoList.UWP.ViewModels.MainPage"
     mvvm:ViewModelLocator.AutoWireViewModel="True"
@@ -46,7 +46,9 @@
         <Grid Grid.Row="1" Margin="16">
             <TextBox Text="{Binding NewItemText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Add a to-do..." >
                 <i:Interaction.Behaviors>
-                    <behaviors:TextBoxBehavior EnterPressedCommand="{Binding AddNewItemCommand}" />
+                    <core:EventTriggerBehavior EventName="KeyDown">
+                        <core:InvokeCommandAction Command="{Binding AddNewItemCommand}" />
+                    </core:EventTriggerBehavior>
                 </i:Interaction.Behaviors>
             </TextBox>
         </Grid>
