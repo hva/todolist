@@ -111,6 +111,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CacheControlAttribute.cs" />
     <Compile Include="Controllers\ItemsController.cs" />
     <Compile Include="Controllers\OperationsController.cs" />
     <Compile Include="Data\Constants.cs" />

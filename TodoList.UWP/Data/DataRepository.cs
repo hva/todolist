@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using TodoList.UWP.Models;
 using Windows.Web.Http;
 using Newtonsoft.Json;
+using HttpClient = Windows.Web.Http.HttpClient;
 
 namespace TodoList.UWP.Data
 {
@@ -16,14 +18,30 @@ namespace TodoList.UWP.Data
         {
             using (var client = new HttpClient())
             {
-                var str = await client.GetStringAsync(GetUri("api/items"));
-                return JsonConvert.DeserializeObject<DataFeed>(str);
+                var resp = await client.GetAsync(GetUri("api/items"));
+                if (resp.StatusCode == HttpStatusCode.Ok)
+                {
+                    var str = await resp.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<DataFeed>(str);
+                }
+                throw new HttpRequestException();
             }
         }
 
-        public Task<List<Operation>> GetOperationsAsync(Guid? lastOperationId)
+        public async Task<List<Operation>> GetOperationsAsync(Guid? lastOperationId)
         {
-            throw new NotImplementedException();
+            using (var client = new HttpClient())
+            {
+                var uri = string.Format("api/operations?lastOperationId={0}", lastOperationId);
+                var resp = await client.GetAsync(GetUri(uri));
+                if (resp.StatusCode == HttpStatusCode.Ok)
+                {
+                    var str = await resp.Content.ReadAsStringAsync();
+                    var operations = JsonConvert.DeserializeObject<List<Operation>>(str);
+                    return operations;
+                }
+                throw new HttpRequestException();
+            }
         }
 
         public async Task<List<Operation>> PostOperationsAsync(Guid? lastOperationId, Operation operation)
@@ -41,7 +59,7 @@ namespace TodoList.UWP.Data
                         var operations = JsonConvert.DeserializeObject<List<Operation>>(str);
                         return operations;
                     }
-                    throw new Exception("Server side error");
+                    throw new HttpRequestException();
                 }
             }
         }

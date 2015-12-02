@@ -8,6 +8,7 @@ namespace TodoList.Api.Controllers
 {
     public class ItemsController : ApiController
     {
+        [CacheControl(MaxAge = 5)]
         public IHttpActionResult Get()
         {
             var data = StorageHelper.Read<DataSet>(Constants.FileName) ?? new DataSet();

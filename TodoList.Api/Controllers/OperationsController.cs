@@ -7,6 +7,14 @@ namespace TodoList.Api.Controllers
 {
     public class OperationsController : ApiController
     {
+        [CacheControl(MaxAge = 5)]
+        public IHttpActionResult Get(Guid? lastOperationId)
+        {
+            var data = StorageHelper.Read<DataSet>(Constants.FileName) ?? new DataSet();
+            var operations = data.GetOperationsSince(lastOperationId);
+            return Ok(operations);
+        }
+
         public IHttpActionResult Post(Operation operation, Guid? lastOperationId)
         {
             var data = StorageHelper.Read<DataSet>(Constants.FileName) ?? new DataSet();
