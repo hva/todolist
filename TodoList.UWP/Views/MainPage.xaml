@@ -18,8 +18,9 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="44" />
                     <ColumnDefinition />
+                    <ColumnDefinition Width="16" />
                 </Grid.ColumnDefinitions>
-                <CheckBox IsChecked="{Binding IsComplete, Mode=TwoWay}" />
+                <CheckBox IsChecked="{Binding IsComplete, Mode=TwoWay}" IsTabStop="False" />
                 <TextBlock Grid.Column="1" Text="{Binding Item.Text}" VerticalAlignment="Center" />
             </Grid>
         </DataTemplate>

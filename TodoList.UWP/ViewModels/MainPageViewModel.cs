@@ -97,11 +97,13 @@ namespace TodoList.UWP.ViewModels
             var item = e.NewItems[0] as ItemViewModel;
             if (item == null) return;
 
+            var newIndex = CorrectIndex(e.NewStartingIndex, item);
+
             var operation = new Operation
             {
                 Type = OperationType.Reorder,
                 ItemId = item.Item.Id,
-                Value = e.NewStartingIndex.ToString(),
+                Value = newIndex.ToString(),
             };
 
             IsBusy = true;
@@ -129,6 +131,7 @@ namespace TodoList.UWP.ViewModels
             if (operations.Count > 0)
             {
                 lastOperationId = operations.Last().Id;
+
                 Items.CollectionChanged -= OnCollectionChanged;
                 Items.Merge(operations, OnStatusChanged);
                 Items.CollectionChanged += OnCollectionChanged;
@@ -149,6 +152,31 @@ namespace TodoList.UWP.ViewModels
             IsBusy = false;
 
             Merge(operations);
+        }
+
+        private int CorrectIndex(int index, ItemViewModel item)
+        {
+            var minIndex = Items.Count(x => !x.IsComplete);
+            if (item.IsComplete && index < minIndex)
+            {
+                Items.CollectionChanged -= OnCollectionChanged;
+                Items.RemoveAt(index);
+                Items.Insert(minIndex, item);
+                Items.CollectionChanged += OnCollectionChanged;
+                return minIndex;
+            }
+
+            var maxIndex = minIndex - 1;
+            if (!item.IsComplete && index > maxIndex)
+            {
+                Items.CollectionChanged -= OnCollectionChanged;
+                Items.RemoveAt(index);
+                Items.Insert(maxIndex, item);
+                Items.CollectionChanged += OnCollectionChanged;
+                return maxIndex;
+            }
+
+            return index;
         }
     }
 }

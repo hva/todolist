@@ -41,6 +41,9 @@ namespace TodoList.UWP.Data
 
         private static void CreateItem(this IList<ItemViewModel> items, Operation operation, Action<Item> onIsCompleteChanged)
         {
+            var itemExists = items.Any(x => x.Item.Id == operation.ItemId);
+            if (itemExists) return;
+
             var item = new Item
             {
                 Id = operation.ItemId,
