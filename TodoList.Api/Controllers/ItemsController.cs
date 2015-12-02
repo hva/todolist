@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using TodoList.Api.Data;
 using TodoList.Api.Models;
@@ -8,30 +8,22 @@ namespace TodoList.Api.Controllers
 {
     public class ItemsController : ApiController
     {
-        private const string fileName = "data.json";
-        private readonly List<Item> list;
-
-        public ItemsController()
-        {
-            list = StorageHelper.Read<List<Item>>(fileName) ?? new List<Item>();
-        }
-
         public IHttpActionResult Get()
         {
-            return Ok(list);
-        }
+            var data = StorageHelper.Read<DataSet>(Constants.FileName) ?? new DataSet();
 
-        public IHttpActionResult Post(Item item)
-        {
-            item.Guid = Guid.NewGuid();
-            list.Insert(0, item);
-            Flush();
-            return Created(string.Empty, item.Guid);
-        }
+            Guid? lastOperationId = null;
+            if (data.Operations.Count > 0)
+            {
+                lastOperationId = data.Operations.Last().Id;
+            }
 
-        private void Flush()
-        {
-            StorageHelper.Write(list, fileName);
+            var feed = new DataFeed
+            {
+                Items = data.Items,
+                LastOperationId = lastOperationId
+            };
+            return Ok(feed);
         }
     }
 }

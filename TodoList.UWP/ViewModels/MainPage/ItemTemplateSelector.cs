@@ -1,5 +1,6 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using TodoList.UWP.Models;
 
 namespace TodoList.UWP.ViewModels.MainPage
 {
@@ -10,7 +11,7 @@ namespace TodoList.UWP.ViewModels.MainPage
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
-            if (item is ItemViewModel)
+            if (item is Item)
             {
                 return ItemTemplate;
             }

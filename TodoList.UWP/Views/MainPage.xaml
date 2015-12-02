@@ -9,18 +9,19 @@
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:viewModels="using:TodoList.UWP.ViewModels"
     xmlns:mainPage="using:TodoList.UWP.ViewModels.MainPage"
+    xmlns:models="using:TodoList.UWP.Models"
     mvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
 
     <Page.Resources>
         <DataTemplate x:Key="ItemTemplate">
-            <Grid d:DataContext="{d:DesignInstance Type=mainPage:ItemViewModel}">
+            <Grid d:DataContext="{d:DesignInstance Type=models:Item}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="44" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <CheckBox IsChecked="{Binding IsDone, Mode=TwoWay}" />
-                <TextBlock Grid.Column="1" Text="{Binding Item.Text}" VerticalAlignment="Center" />
+                <CheckBox />
+                <TextBlock Grid.Column="1" Text="{Binding Text}" VerticalAlignment="Center" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SeparatorTemplate">

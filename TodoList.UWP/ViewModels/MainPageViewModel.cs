@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,21 +11,21 @@ using Prism.Windows.Mvvm;
 using Prism.Windows.Navigation;
 using TodoList.UWP.Data;
 using TodoList.UWP.Models;
-using TodoList.UWP.ViewModels.MainPage;
 
 namespace TodoList.UWP.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
         private string newItemText;
-        private readonly ItemsListSeparator separator;
-        private readonly IItemsRepository itemsRepository;
+        private Guid? lastOperationId;
+        //private readonly ItemsListSeparator separator;
+        private readonly IDataRepository dataRepository;
 
         public MainPageViewModel()
         {
-            itemsRepository = new ItemsRepository();
+            dataRepository = new DataRepository();
 
-            separator = new ItemsListSeparator();
+            //separator = new ItemsListSeparator();
             AddNewItemCommand = DelegateCommand<KeyRoutedEventArgs>.FromAsyncHandler(AddNewItemAsync, CanAddNewItem);
             Items = new ObservableCollection<object>();
         }
@@ -40,11 +41,10 @@ namespace TodoList.UWP.ViewModels
 
         public override async void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
         {
-            var list = await itemsRepository.GetAsync();
-            var todos = list.Select(CreateTodo);
-            Items.AddRange(todos);
-
-            Items.Add(separator);
+            var feed = await dataRepository.GetFeedAsync();
+            lastOperationId = feed.LastOperationId;
+            Items.AddRange(feed.Items);
+            //Items.Add(separator);
         }
 
         private bool CanAddNewItem(KeyRoutedEventArgs e)
@@ -56,40 +56,18 @@ namespace TodoList.UWP.ViewModels
         {
             if (e.Key == VirtualKey.Enter)
             {
-                var item = new Item { Text = newItemText };
+                var operation = new Operation
+                {
+                    Type = OperationType.Create,
+                    Value = newItemText,
+                };
                 NewItemText = string.Empty;
 
-                await itemsRepository.CreateAsync(item);
+                var operations = await dataRepository.PostOperationsAsync(lastOperationId, operation);
+                lastOperationId = operations.Last().Id;
 
-                var viewModel = CreateTodo(item);
-                Items.Insert(0, viewModel);
+                Items.Merge(operations);
             }
-        }
-
-        private async void ChangeItemStateAsync(ItemViewModel viewModel)
-        {
-            var isDone = viewModel.IsDone;
-            await itemsRepository.SetIsDoneAsync(viewModel.Item.Guid, isDone);
-
-            Items.Remove(viewModel);
-            var separatorIndex = Items.IndexOf(separator);
-            if (isDone)
-            {
-                Items.Insert(separatorIndex + 1, CreateDone(viewModel.Item));
-            }
-            else
-            {
-                Items.Insert(separatorIndex, CreateTodo(viewModel.Item));
-            }
-        }
-
-        private ItemViewModel CreateTodo(Item item)
-        {
-            return new ItemViewModel(item, false, ChangeItemStateAsync);
-        }
-        private ItemViewModel CreateDone(Item item)
-        {
-            return new ItemViewModel(item, true, ChangeItemStateAsync);
         }
     }
 }
