@@ -20,7 +20,7 @@
                     <ColumnDefinition Width="44" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <CheckBox />
+                <!--<CheckBox />-->
                 <TextBlock Grid.Column="1" Text="{Binding Text}" VerticalAlignment="Center" />
             </Grid>
         </DataTemplate>
@@ -56,9 +56,10 @@
 
         <ListView
             Grid.Row="2"
-            VerticalAlignment="Top"
             ItemsSource="{Binding Items}"
             ItemTemplateSelector="{StaticResource ItemTemplateSelector}"
+            CanReorderItems="True"
+            AllowDrop="True"
             Margin="16,0" />
 
         <ProgressBar IsIndeterminate="{Binding IsBusy}" Grid.Row="1" Background="Transparent" Foreground="White" VerticalAlignment="Top" />

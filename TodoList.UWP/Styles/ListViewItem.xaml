@@ -3,18 +3,39 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style TargetType="ListViewItem">
-        <Setter Property="Background" Value="White" />
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="TabNavigation" Value="Local"/>
+        <Setter Property="IsHoldingEnabled" Value="True"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="0,0,0,1"/>
         <Setter Property="MinHeight" Value="44"/>
-        <Setter Property="Margin" Value="0,0,0,1" />
-        <Setter Property="Padding" Value="0" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListViewItem">
                     <ListViewItemPresenter
+                        ContentTransitions="{TemplateBinding ContentTransitions}"
+                        SelectionCheckMarkVisualEnabled="True"
+                        CheckBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                        CheckBoxBrush="{ThemeResource SystemControlForegroundBaseMediumHighBrush}"
+                        DragBackground="Transparent"
+                        DragForeground="{ThemeResource ListViewItemDragForegroundThemeBrush}"
+                        FocusBorderBrush="{ThemeResource SystemControlForegroundAltHighBrush}"
+                        FocusSecondaryBorderBrush="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                        PlaceholderBackground="{ThemeResource ListViewItemPlaceholderBackgroundThemeBrush}"
+                        PointerOverBackground="#E5F3FF"
+                        PointerOverForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
                         SelectedBackground="#CCE8FF"
-                        SelectedPressedBackground="#CCE8FF"
+                        SelectedForeground="{ThemeResource SystemControlHighlightAltBaseHighBrush}"
                         SelectedPointerOverBackground="#CCE8FF"
-                        PointerOverBackground="#E5F3FF" />
+                        PressedBackground="#CCE8FF"
+                        SelectedPressedBackground="#CCE8FF"
+                        DisabledOpacity="{ThemeResource ListViewItemDisabledThemeOpacity}"
+                        DragOpacity="{ThemeResource ListViewItemDragThemeOpacity}"
+                        ReorderHintOffset="{ThemeResource ListViewItemReorderHintThemeOffset}"
+                        HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                        ContentMargin="{TemplateBinding Padding}"
+                        CheckMode="Inline"/>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
