@@ -61,5 +61,6 @@
             ItemTemplateSelector="{StaticResource ItemTemplateSelector}"
             Margin="16,0" />
 
+        <ProgressBar IsIndeterminate="{Binding IsBusy}" Grid.Row="1" Background="Transparent" Foreground="White" VerticalAlignment="Top" />
     </Grid>
 </Page>

@@ -16,6 +16,7 @@ namespace TodoList.UWP.ViewModels
 {
     public class MainPageViewModel : ViewModelBase
     {
+        private bool isBusy;
         private string newItemText;
         private Guid? lastOperationId;
         //private readonly ItemsListSeparator separator;
@@ -33,6 +34,12 @@ namespace TodoList.UWP.ViewModels
         public ICommand AddNewItemCommand { get; }
         public ObservableCollection<object> Items { get; }
 
+        public bool IsBusy
+        {
+            get { return isBusy; }
+            set { SetProperty(ref isBusy, value); }
+        }
+
         public string NewItemText
         {
             get { return newItemText; }
@@ -41,7 +48,10 @@ namespace TodoList.UWP.ViewModels
 
         public override async void OnNavigatedTo(NavigatedToEventArgs e, Dictionary<string, object> viewModelState)
         {
+            IsBusy = true;
             var feed = await dataRepository.GetFeedAsync();
+            IsBusy = false;
+
             lastOperationId = feed.LastOperationId;
             Items.AddRange(feed.Items);
             //Items.Add(separator);
@@ -63,9 +73,11 @@ namespace TodoList.UWP.ViewModels
                 };
                 NewItemText = string.Empty;
 
+                IsBusy = true;
                 var operations = await dataRepository.PostOperationsAsync(lastOperationId, operation);
-                lastOperationId = operations.Last().Id;
+                IsBusy = false;
 
+                lastOperationId = operations.Last().Id;
                 Items.Merge(operations);
             }
         }
