@@ -11,7 +11,7 @@ namespace TodoList.UWP.ViewModels.MainPage
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
-            if (item is Item)
+            if (item is ItemViewModel)
             {
                 return ItemTemplate;
             }

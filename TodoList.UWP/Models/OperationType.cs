@@ -3,6 +3,7 @@
     public enum OperationType
     {
         Create = 0,
-        Reorder
+        Reorder,
+        ChangeStatus,
     }
 }

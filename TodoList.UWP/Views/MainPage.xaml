@@ -8,26 +8,25 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:core="using:Microsoft.Xaml.Interactions.Core"
     xmlns:viewModels="using:TodoList.UWP.ViewModels"
-    xmlns:mainPage="using:TodoList.UWP.ViewModels.MainPage"
-    xmlns:models="using:TodoList.UWP.Models"
+    xmlns:vm="using:TodoList.UWP.ViewModels.MainPage"
     mvvm:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
 
     <Page.Resources>
         <DataTemplate x:Key="ItemTemplate">
-            <Grid d:DataContext="{d:DesignInstance Type=models:Item}">
+            <Grid d:DataContext="{d:DesignInstance Type=vm:ItemViewModel}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="44" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <!--<CheckBox />-->
-                <TextBlock Grid.Column="1" Text="{Binding Text}" VerticalAlignment="Center" />
+                <CheckBox IsChecked="{Binding IsComplete, Mode=TwoWay}" />
+                <TextBlock Grid.Column="1" Text="{Binding Item.Text}" VerticalAlignment="Center" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="SeparatorTemplate">
             <Rectangle Height="60" />
         </DataTemplate>
-        <mainPage:ItemTemplateSelector
+        <vm:ItemTemplateSelector
             x:Key="ItemTemplateSelector"
             ItemTemplate="{StaticResource ItemTemplate}"
             SeparatorTemplate="{StaticResource SeparatorTemplate}" />

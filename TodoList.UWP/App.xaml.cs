@@ -18,7 +18,9 @@ namespace TodoList.UWP
 
         protected override UIElement CreateShell(Frame rootFrame)
         {
+            // title bar colors fix
             ApplicationView.GetForCurrentView().Init();
+
             return rootFrame;
         }
     }

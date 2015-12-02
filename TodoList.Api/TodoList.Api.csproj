@@ -115,7 +115,7 @@
     <Compile Include="Controllers\ItemsController.cs" />
     <Compile Include="Controllers\OperationsController.cs" />
     <Compile Include="Data\Constants.cs" />
-    <Compile Include="Data\DataExtensions.cs" />
+    <Compile Include="Data\DataSetExtensions.cs" />
     <Compile Include="Models\DataFeed.cs" />
     <Compile Include="Models\DataSet.cs" />
     <Compile Include="Models\Item.cs" />

@@ -13,6 +13,7 @@ using Prism.Windows.Mvvm;
 using Prism.Windows.Navigation;
 using TodoList.UWP.Data;
 using TodoList.UWP.Models;
+using TodoList.UWP.ViewModels.MainPage;
 
 namespace TodoList.UWP.ViewModels
 {
@@ -21,22 +22,21 @@ namespace TodoList.UWP.ViewModels
         private bool isBusy;
         private string newItemText;
         private Guid? lastOperationId;
-        private DispatcherTimer timer;
 
+        private readonly DispatcherTimer timer;
         private readonly IDataRepository dataRepository;
 
         public MainPageViewModel()
         {
+            timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
             dataRepository = new DataRepository();
 
-            //separator = new ItemsListSeparator();
             AddNewItemCommand = DelegateCommand<KeyRoutedEventArgs>.FromAsyncHandler(AddNewItemAsync, CanAddNewItem);
-            Items = new ObservableCollection<Item>();
-            timer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(5) };
+            Items = new ObservableCollection<ItemViewModel>();
         }
 
         public ICommand AddNewItemCommand { get; }
-        public ObservableCollection<Item> Items { get; }
+        public ObservableCollection<ItemViewModel> Items { get; }
 
         public bool IsBusy
         {
@@ -58,8 +58,7 @@ namespace TodoList.UWP.ViewModels
 
             lastOperationId = feed.LastOperationId;
 
-            Items.CollectionChanged -= OnCollectionChanged;
-            Items.AddRange(feed.Items);
+            Items.Init(feed.Items, OnStatusChanged);
             Items.CollectionChanged += OnCollectionChanged;
 
             timer.Tick += Refresh;
@@ -86,10 +85,7 @@ namespace TodoList.UWP.ViewModels
                 var operations = await dataRepository.PostOperationsAsync(lastOperationId, operation);
                 IsBusy = false;
 
-                lastOperationId = operations.Last().Id;
-                Items.CollectionChanged -= OnCollectionChanged;
-                Items.Merge(operations);
-                Items.CollectionChanged += OnCollectionChanged;
+                Merge(operations);
             }
         }
 
@@ -98,13 +94,13 @@ namespace TodoList.UWP.ViewModels
             if (e.Action != NotifyCollectionChangedAction.Add) return;
             if (e.NewItems == null || e.NewItems.Count == 0) return;
 
-            var item = e.NewItems[0] as Item;
+            var item = e.NewItems[0] as ItemViewModel;
             if (item == null) return;
 
             var operation = new Operation
             {
                 Type = OperationType.Reorder,
-                ItemId = item.Id,
+                ItemId = item.Item.Id,
                 Value = e.NewStartingIndex.ToString(),
             };
 
@@ -112,11 +108,7 @@ namespace TodoList.UWP.ViewModels
             var operations = await dataRepository.PostOperationsAsync(lastOperationId, operation);
             IsBusy = false;
 
-            lastOperationId = operations.Last().Id;
-
-            Items.CollectionChanged -= OnCollectionChanged;
-            Items.Merge(operations);
-            Items.CollectionChanged += OnCollectionChanged;
+            Merge(operations);
         }
 
         private async void Refresh(object sender, object e)
@@ -127,16 +119,36 @@ namespace TodoList.UWP.ViewModels
             var operations = await dataRepository.GetOperationsAsync(lastOperationId);
             IsBusy = false;
 
+            Merge(operations);
+
+            timer.Tick += Refresh;
+        }
+
+        private void Merge(List<Operation> operations)
+        {
             if (operations.Count > 0)
             {
                 lastOperationId = operations.Last().Id;
-
                 Items.CollectionChanged -= OnCollectionChanged;
-                Items.Merge(operations);
+                Items.Merge(operations, OnStatusChanged);
                 Items.CollectionChanged += OnCollectionChanged;
             }
+        }
 
-            timer.Tick += Refresh;
+        private async void OnStatusChanged(Item item)
+        {
+            var operation = new Operation
+            {
+                Type = OperationType.ChangeStatus,
+                ItemId = item.Id,
+                Value = item.IsComplete.ToString(),
+            };
+
+            IsBusy = true;
+            var operations = await dataRepository.PostOperationsAsync(lastOperationId, operation);
+            IsBusy = false;
+
+            Merge(operations);
         }
     }
 }

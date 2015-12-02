@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using Windows.UI;
+﻿using Windows.UI;
 using Windows.UI.ViewManagement;
 
 namespace TodoList.UWP
 {
-    public static class Extensions
+    public static class ApplicationViewExtensions
     {
         public static void Init(this ApplicationView applicationView)
         {
@@ -33,18 +31,5 @@ namespace TodoList.UWP
             titleBar.InactiveForegroundColor = foreground;
             titleBar.InactiveBackgroundColor = background;
         }
-
-        public static Collection<T> AddRange<T>(this Collection<T> collection, IEnumerable<T> items)
-        {
-            if (collection == null) throw new System.ArgumentNullException(nameof(collection));
-            if (items == null) throw new System.ArgumentNullException(nameof(items));
-
-            foreach (var each in items)
-            {
-                collection.Add(each);
-            }
-            return collection;
-        }
-
     }
 }

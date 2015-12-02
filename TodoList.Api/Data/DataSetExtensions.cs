@@ -5,7 +5,7 @@ using TodoList.Api.Models;
 
 namespace TodoList.Api.Data
 {
-    public static class DataExtensions
+    public static class DataSetExtensions
     {
         public static void Merge(this DataSet data, Operation operation)
         {
@@ -16,6 +16,9 @@ namespace TodoList.Api.Data
                     break;
                 case OperationType.Reorder:
                     data.ReorderItem(operation);
+                    break;
+                case OperationType.ChangeStatus:
+                    data.ChangeItemStatus(operation);
                     break;
             }
         }
@@ -62,6 +65,23 @@ namespace TodoList.Api.Data
                         operation.Id = Guid.NewGuid();
                         data.Operations.Add(operation);
                     }
+                }
+            }
+        }
+        private static void ChangeItemStatus(this DataSet data, Operation operation)
+        {
+            if (string.IsNullOrEmpty(operation.Value)) return;
+
+            bool newValue;
+            if (bool.TryParse(operation.Value, out newValue))
+            {
+                var item = data.Items.FirstOrDefault(x => x.Id == operation.ItemId);
+                if (item != null)
+                {
+                    item.IsComplete = newValue;
+
+                    operation.Id = Guid.NewGuid();
+                    data.Operations.Add(operation);
                 }
             }
         }
