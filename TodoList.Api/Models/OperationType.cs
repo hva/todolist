@@ -2,6 +2,7 @@
 {
     public enum OperationType
     {
-        Create = 0
+        Create = 0,
+        Reorder
     }
 }

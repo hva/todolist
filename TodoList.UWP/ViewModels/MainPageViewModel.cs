@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -28,11 +29,42 @@ namespace TodoList.UWP.ViewModels
 
             //separator = new ItemsListSeparator();
             AddNewItemCommand = DelegateCommand<KeyRoutedEventArgs>.FromAsyncHandler(AddNewItemAsync, CanAddNewItem);
-            Items = new ObservableCollection<object>();
+            Items = new ObservableCollection<Item>();
+        }
+
+        private async void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action != NotifyCollectionChangedAction.Add) return;
+            if (e.NewItems == null || e.NewItems.Count == 0) return;
+
+            var item = e.NewItems[0] as Item;
+            if (item == null) return;
+
+            var operation = new Operation
+            {
+                Type = OperationType.Reorder,
+                ItemId = item.Id,
+                Value = e.NewStartingIndex.ToString(),
+            };
+
+            IsBusy = true;
+            var operations = await dataRepository.PostOperationsAsync(lastOperationId, operation);
+            IsBusy = false;
+
+            lastOperationId = operations.Last().Id;
+
+            Items.CollectionChanged -= OnCollectionChanged;
+            Items.Merge(operations);
+            Items.CollectionChanged += OnCollectionChanged;
+
+            //var newIndex = (isFavoriteNationalTeam && interestSettings.FavoriteClub != null) ? 1 : 0;
+            //await CoreWindow.GetForCurrentThread().Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            //    FollowItems.Move(oldIndex, newIndex)
+            //);
         }
 
         public ICommand AddNewItemCommand { get; }
-        public ObservableCollection<object> Items { get; }
+        public ObservableCollection<Item> Items { get; }
 
         public bool IsBusy
         {
@@ -53,7 +85,10 @@ namespace TodoList.UWP.ViewModels
             IsBusy = false;
 
             lastOperationId = feed.LastOperationId;
+
+            Items.CollectionChanged -= OnCollectionChanged;
             Items.AddRange(feed.Items);
+            Items.CollectionChanged += OnCollectionChanged;
             //Items.Add(separator);
         }
 
@@ -78,7 +113,9 @@ namespace TodoList.UWP.ViewModels
                 IsBusy = false;
 
                 lastOperationId = operations.Last().Id;
+                Items.CollectionChanged -= OnCollectionChanged;
                 Items.Merge(operations);
+                Items.CollectionChanged += OnCollectionChanged;
             }
         }
     }
