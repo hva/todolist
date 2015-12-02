@@ -81,6 +81,10 @@ namespace TodoList.UWP.Data
                 if (item != null)
                 {
                     item.SetIsComplete(newValue);
+
+                    items.Remove(item);
+                    var index = items.Count(x => !x.Item.IsComplete);
+                    items.Insert(index, item);
                 }
             }
         }

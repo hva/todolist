@@ -41,7 +41,10 @@
         </Grid>
 
         <Grid Grid.Row="1" Margin="16">
-            <TextBox Text="{Binding NewItemText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Add a to-do..." >
+            <TextBox
+                Text="{Binding NewItemText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                PlaceholderText="Add a to-do..."
+                PreventKeyboardDisplayOnProgrammaticFocus="True">
                 <i:Interaction.Behaviors>
                     <core:EventTriggerBehavior EventName="KeyDown">
                         <core:InvokeCommandAction Command="{Binding AddNewItemCommand}" />

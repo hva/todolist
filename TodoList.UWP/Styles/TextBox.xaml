@@ -22,12 +22,6 @@
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="PointerOver" />
                                 <VisualState x:Name="Focused">
-                                    <!--<Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentElement"
-                                                     Storyboard.TargetProperty="RequestedTheme">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="Light" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>-->
                                     <VisualState.Setters>
                                         <Setter Target="BackgroundElement.Background" Value="White" />
                                         <Setter Target="ContentElement.Foreground" Value="{ThemeResource SystemControlForegroundChromeBlackHighBrush}" />

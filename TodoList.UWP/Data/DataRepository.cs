@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 using TodoList.UWP.Models;
 using Windows.Web.Http;
 using Newtonsoft.Json;
-using HttpClient = Windows.Web.Http.HttpClient;
 
 namespace TodoList.UWP.Data
 {
@@ -19,12 +17,11 @@ namespace TodoList.UWP.Data
             using (var client = new HttpClient())
             {
                 var resp = await client.GetAsync(GetUri("api/items"));
-                if (resp.StatusCode == HttpStatusCode.Ok)
-                {
-                    var str = await resp.Content.ReadAsStringAsync();
-                    return JsonConvert.DeserializeObject<DataFeed>(str);
-                }
-                throw new HttpRequestException();
+
+                resp.EnsureSuccessStatusCode();
+
+                var str = await resp.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<DataFeed>(str);
             }
         }
 
@@ -34,13 +31,12 @@ namespace TodoList.UWP.Data
             {
                 var uri = string.Format("api/operations?lastOperationId={0}", lastOperationId);
                 var resp = await client.GetAsync(GetUri(uri));
-                if (resp.StatusCode == HttpStatusCode.Ok)
-                {
-                    var str = await resp.Content.ReadAsStringAsync();
-                    var operations = JsonConvert.DeserializeObject<List<Operation>>(str);
-                    return operations;
-                }
-                throw new HttpRequestException();
+
+                resp.EnsureSuccessStatusCode();
+
+                var str = await resp.Content.ReadAsStringAsync();
+                var operations = JsonConvert.DeserializeObject<List<Operation>>(str);
+                return operations;
             }
         }
 
@@ -53,13 +49,12 @@ namespace TodoList.UWP.Data
                 {
                     var uri = string.Format("api/operations?lastOperationId={0}", lastOperationId);
                     var resp = await client.PostAsync(GetUri(uri), content);
-                    if (resp.StatusCode == HttpStatusCode.Created)
-                    {
-                        var str = await resp.Content.ReadAsStringAsync();
-                        var operations = JsonConvert.DeserializeObject<List<Operation>>(str);
-                        return operations;
-                    }
-                    throw new HttpRequestException();
+
+                    resp.EnsureSuccessStatusCode();
+
+                    var str = await resp.Content.ReadAsStringAsync();
+                    var operations = JsonConvert.DeserializeObject<List<Operation>>(str);
+                    return operations;
                 }
             }
         }

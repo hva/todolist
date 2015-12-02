@@ -4,7 +4,6 @@ using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Prism.Windows;
-using TodoList.UWP.Constants;
 
 namespace TodoList.UWP
 {
@@ -12,7 +11,7 @@ namespace TodoList.UWP
     {
         protected override Task OnLaunchApplicationAsync(LaunchActivatedEventArgs args)
         {
-            NavigationService.Navigate(PageName.Main, null);
+            NavigationService.Navigate("Main", null);
             return Task.FromResult<object>(null);
         }
 

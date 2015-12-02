@@ -80,6 +80,10 @@ namespace TodoList.Api.Data
                 {
                     item.IsComplete = newValue;
 
+                    data.Items.Remove(item);
+                    var index = data.Items.Count(x => !x.IsComplete);
+                    data.Items.Insert(index, item);
+
                     operation.Id = Guid.NewGuid();
                     data.Operations.Add(operation);
                 }
