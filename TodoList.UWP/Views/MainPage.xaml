@@ -23,13 +23,10 @@
                 <TextBlock Grid.Column="1" Text="{Binding Item.Text}" VerticalAlignment="Center" />
             </Grid>
         </DataTemplate>
-        <DataTemplate x:Key="SeparatorTemplate">
-            <Rectangle Height="60" />
-        </DataTemplate>
-        <vm:ItemTemplateSelector
-            x:Key="ItemTemplateSelector"
-            ItemTemplate="{StaticResource ItemTemplate}"
-            SeparatorTemplate="{StaticResource SeparatorTemplate}" />
+        <vm:ItemStyleSelector
+            x:Key="StyleSelector"
+            TodoStyle="{StaticResource TodoListViewItem}"
+            CompleteStyle="{StaticResource CompleteListViewItem}" />
     </Page.Resources>
 
     <Grid Background="{StaticResource TertiaryBg}" d:DataContext="{d:DesignInstance Type=viewModels:MainPageViewModel}">
@@ -56,7 +53,8 @@
         <ListView
             Grid.Row="2"
             ItemsSource="{Binding Items}"
-            ItemTemplateSelector="{StaticResource ItemTemplateSelector}"
+            ItemTemplate="{StaticResource ItemTemplate}"
+            ItemContainerStyleSelector="{StaticResource StyleSelector}"
             CanReorderItems="True"
             AllowDrop="True"
             Margin="16,0" />

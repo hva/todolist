@@ -106,8 +106,7 @@
     <Compile Include="Models\OperationType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\MainPageViewModel.cs" />
-    <Compile Include="ViewModels\MainPage\ItemsListSeparator.cs" />
-    <Compile Include="ViewModels\MainPage\ItemTemplateSelector.cs" />
+    <Compile Include="ViewModels\MainPage\ItemStyleSelector.cs" />
     <Compile Include="ViewModels\MainPage\ItemViewModel.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
