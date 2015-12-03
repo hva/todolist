@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 
 namespace TodoList.Api.Data
 {
+    // StorageHelper is used to read/write data from/to file system.
+    // File name is mapped to web site's App_Data folder.
     public class StorageHelper
     {
         public static T Read<T>(string fileName) where T : class

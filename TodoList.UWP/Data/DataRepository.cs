@@ -12,6 +12,7 @@ namespace TodoList.UWP.Data
     {
         private const string endpoint = "http://localhost:63644/";
 
+        // Makes GET request to items REST service and returns DataFeed.
         public async Task<DataFeed> GetFeedAsync()
         {
             using (var client = new HttpClient())
@@ -25,6 +26,8 @@ namespace TodoList.UWP.Data
             }
         }
 
+        // Makes GET request to operations REST service
+        // and returns operations since 'lastOperationId' list.
         public async Task<List<Operation>> GetOperationsAsync(Guid? lastOperationId)
         {
             using (var client = new HttpClient())
@@ -40,6 +43,8 @@ namespace TodoList.UWP.Data
             }
         }
 
+        // Makes POST request with operation body to operations REST service
+        // and returns operations since 'lastOperationId' list.
         public async Task<List<Operation>> PostOperationsAsync(Guid? lastOperationId, Operation operation)
         {
             using (var client = new HttpClient())
@@ -59,6 +64,7 @@ namespace TodoList.UWP.Data
             }
         }
 
+        // Returns absolute REST service Uri
         private static Uri GetUri(string path)
         {
             return new Uri(string.Concat(endpoint, path), UriKind.Absolute);

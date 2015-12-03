@@ -3,6 +3,8 @@ using Windows.UI.Xaml.Controls;
 
 namespace TodoList.UWP.ViewModels.MainPage
 {
+    // ItemStyleSelector returns different ListViewItem styles
+    // according to 'isComplete' status of ItemViewModel.
     public class ItemStyleSelector : StyleSelector
     {
         public Style TodoStyle { get; set; }

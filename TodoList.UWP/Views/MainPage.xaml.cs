@@ -14,6 +14,7 @@ namespace TodoList.UWP.Views
             HideStatusBar();
         }
 
+        // Hides black box on the top of the screen for mobile platform.
         private static async void HideStatusBar()
         {
             if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar"))

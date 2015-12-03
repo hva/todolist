@@ -9,6 +9,7 @@ namespace TodoList.UWP.Data
 {
     public static class DataExtensions
     {
+        // Initializes ItemViewModel collection from list of Item.
         public static void Init(this ObservableCollection<ItemViewModel> collection, IEnumerable<Item> items, Action<Item> onStatusChanged)
         {
             if (items == null) return;
@@ -20,6 +21,7 @@ namespace TodoList.UWP.Data
             }
         }
 
+        // Merges list of operations to ItemViewModel collection.
         public static void Merge(this ObservableCollection<ItemViewModel> items, List<Operation> operations, Action<Item> onStatusChanged)
         {
             foreach (var operation in operations)
@@ -39,6 +41,7 @@ namespace TodoList.UWP.Data
             }
         }
 
+        // Creates new ItemViewModel in the top of collection.
         private static void CreateItem(this IList<ItemViewModel> items, Operation operation, Action<Item> onIsCompleteChanged)
         {
             var itemExists = items.Any(x => x.Item.Id == operation.ItemId);
@@ -53,6 +56,7 @@ namespace TodoList.UWP.Data
             items.Insert(0, viewModel);
         }
 
+        // Moves ItemViewModel to specified position.
         private static void MoveItem(this IList<ItemViewModel> items, Operation operation)
         {
             if (string.IsNullOrEmpty(operation.Value)) return;
@@ -73,6 +77,7 @@ namespace TodoList.UWP.Data
             }
         }
 
+        // Changes ItemViewModel 'IsComplete' status.
         private static void ChangeItemStatus(this IList<ItemViewModel> items, Operation operation)
         {
             if (string.IsNullOrEmpty(operation.Value)) return;
@@ -92,6 +97,7 @@ namespace TodoList.UWP.Data
             }
         }
 
+        // Returns ItemViewModel created from Item.
         private static ItemViewModel ToViewModel(this Item item, Action<Item> onIsCompleteChanged)
         {
             return new ItemViewModel

@@ -7,6 +7,8 @@ namespace TodoList.Api.Data
 {
     public static class DataSetExtensions
     {
+        // Merges single operation to items list
+        // and adds operation to operations list.
         public static void Merge(this DataSet data, Operation operation)
         {
             switch (operation.Type)
@@ -23,6 +25,7 @@ namespace TodoList.Api.Data
             }
         }
 
+        // Returns list of operations since 'lastOperationId'.
         public static List<Operation> GetOperationsSince(this DataSet data, Guid? lastOperationId)
         {
             if (lastOperationId.HasValue)
@@ -32,6 +35,8 @@ namespace TodoList.Api.Data
             return data.Operations;
         }
 
+        // Creates new item, puts it to the top of items list
+        // and adds operation to operations list.
         private static void CreateItem(this DataSet data, Operation operation)
         {
             var item = new Item
@@ -46,6 +51,8 @@ namespace TodoList.Api.Data
             data.Operations.Add(operation);
         }
 
+        // Moves existing item to specified position
+        // and adds operation to operations list.
         private static void ReorderItem(this DataSet data, Operation operation)
         {
             if (string.IsNullOrEmpty(operation.Value)) return;
@@ -68,6 +75,9 @@ namespace TodoList.Api.Data
                 }
             }
         }
+
+        // Changes 'IsCompleted' status of existing item
+        // and adds operation to operations list.
         private static void ChangeItemStatus(this DataSet data, Operation operation)
         {
             if (string.IsNullOrEmpty(operation.Value)) return;

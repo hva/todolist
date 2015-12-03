@@ -8,6 +8,10 @@ namespace TodoList.Api.Controllers
 {
     public class ItemsController : ApiController
     {
+        // GET api/items
+        // Returns DataSet with list of items and last operation id.
+        // TODO: replace 'lastOperationId' parameter with Etag
+
         [CacheControl(MaxAge = 5)]
         public IHttpActionResult Get()
         {
