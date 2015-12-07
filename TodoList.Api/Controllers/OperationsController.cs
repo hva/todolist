@@ -9,7 +9,6 @@ namespace TodoList.Api.Controllers
     {
         // GET api/operations
         // Returns list of operations since 'lastOperationId' parameter.
-        // TODO: replace 'lastOperationId' parameter with Etag
 
         [CacheControl(MaxAge = 5)]
         public IHttpActionResult Get(Guid? lastOperationId)
@@ -23,7 +22,6 @@ namespace TodoList.Api.Controllers
         // POST api/operations
         // Creates new operation, merges it to items
         // and returns operations list since 'lastOperationId' parameter.
-        // TODO: replace with 'lastOperationId' parameter Etag
 
         public IHttpActionResult Post(Operation operation, Guid? lastOperationId)
         {
